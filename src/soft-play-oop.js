@@ -1,8 +1,15 @@
 // TODO: Write your class in this file
 class SoftPlay {
-  constructor(numAdults = 0, numChildren = 0) {
+  constructor(numAdults = 0, numChildren = 0, childrenPerAdult = 1, maxOccupancy) {
     this.numAdults = numAdults
     this.numChildren = numChildren
+    this.childrenPerAdult = childrenPerAdult
+
+    if (maxOccupancy) {
+      this.maxOccupancy = maxOccupancy
+    } else {
+      this.maxOccupancy = Infinity
+    }
   }
 
   occupancy() {
@@ -14,9 +21,15 @@ class SoftPlay {
 
   enter(numAdults, numChildren) {
     if (numChildren <= numAdults) {
-      this.numAdults += numAdults
-      this.numChildren += numChildren
-      return true
+      const totalAdults = this.numAdults + numAdults
+      const totalChildren = this.numChildren + numChildren
+
+      if (this.maxOccupancy >= totalAdults + totalChildren &&
+        this.childrenPerAdult < totalAdults / totalChildren) {
+        this.numAdults = totalAdults
+        this.numChildren = totalChildren
+        return true
+      }
     }
     return false
   }
@@ -27,7 +40,8 @@ class SoftPlay {
     if (numAdults >= numChildren &&
       remainingChildren >= 0 &&
       remainingAdults >= 0 &&
-      remainingAdults >= remainingChildren) {
+      remainingAdults >= remainingChildren &&
+      this.childrenPerAdult < remainingAdults / remainingChildren) {
       this.numAdults = remainingAdults
       this.numChildren = remainingChildren
       return true
