@@ -20,7 +20,7 @@ class SoftPlay {
       const totalChildren = this.numChildren + numChildren
 
       if (this.maxOccupancy >= totalAdults + totalChildren &&
-        this.childrenPerAdult < totalAdults / totalChildren) {
+        this.childrenPerAdult <= totalAdults / totalChildren) {
         this.numAdults = totalAdults
         this.numChildren = totalChildren
         return true
@@ -31,17 +31,17 @@ class SoftPlay {
 
   leave(numAdults, numChildren) {
     const remainingAdults = this.numAdults - numAdults
-    const remainingChildren = this.numChildren - 
-    
+    const remainingChildren = this.numChildren - numChildren
+
     if (numAdults >= numChildren &&
       remainingChildren >= 0 &&
       remainingAdults >= 0 &&
-      remainingAdults >= remainingChildren &&
-      this.childrenPerAdult < remainingAdults / remainingChildren) {
-      this.numAdults = remainingAdults
-      this.numChildren = remainingChildren
-
-      return true
+      remainingAdults >= remainingChildren) {
+      if (remainingChildren === 0 || this.childrenPerAdult <= remainingAdults / remainingChildren) {
+        this.numAdults = remainingAdults
+        this.numChildren = remainingChildren
+        return true
+      }
     }
     return false
   }
